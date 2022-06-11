@@ -23,4 +23,3 @@ class World:
         for obj in self.objects:
             obj.draw(ax)
         plt.show()
-
