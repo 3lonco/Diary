@@ -5,15 +5,17 @@ import math
 import matplotlib.patches as patches
 import numpy as np
 import Agent
+import IdealCamera
 
 
 class IdealRobot:
-    def __init__(self, pose, agent=None, color="black"):
+    def __init__(self, pose, agent=None, sensor=None, color="black"):
         self.pose = pose
         self.r = 0.2
         self.color = color
         self.agent = agent
         self.poses = [pose]
+        self.sensor = sensor
 
     def draw(self, ax, elems):
         x, y, theta = self.pose
@@ -22,6 +24,10 @@ class IdealRobot:
         elems += ax.plot([x, xn], [y, yn], color=self.color)
         c = patches.Circle(xy=(x, y), radius=self.r, fill=False, color=self.color)
         elems.append(ax.add_patch(c))
+        if self.sensor and len(self.poses) > 1:
+            self.sensor.draw(ax, elems, self.poses[-2])
+        if self.agent and hasattr(self.agent,"draw"):
+            self.agent(ax.elems)
 
         self.poses.append(self.pose)
         elems += ax.plot(
@@ -30,11 +36,13 @@ class IdealRobot:
             linewidth=0.5,
             color="black",
         )
+        
 
     def one_step(self, time_interval):
         if not self.agent:
             return
-        nu, omega = self.agent.decision()
+        obs = self.sensor.data(self.pose)
+        nu, omega = self.agent.decision(obs)
         self.pose = self.state_transition(nu, omega, time_interval, self.pose)
 
     @classmethod
