@@ -1,3 +1,4 @@
+from time import time_ns
 import matplotlib.pyplot as plt
 import math
 import matplotlib.patches as patches
@@ -7,9 +8,11 @@ import matplotlib.animation as anm
 
 
 class World:
-    def __init__(self, debug=False):
+    def __init__(self, time_span, time_interval, debug=False):
         self.objects = []
         self.debug = debug
+        self.time_span = time_span
+        self.time_interval = time_interval
 
     def append(self, obj):
         self.objects.append(obj)
@@ -32,8 +35,8 @@ class World:
                 fig,
                 self.one_step,
                 fargs=(elems, ax),
-                frames=10,
-                interval=1000,
+                frames=int(self.time_span / self.time_interval) + 1,
+                interval=int(self.time_interval * 1000),
                 repeat=False,
             )
             plt.show()
@@ -41,6 +44,9 @@ class World:
     def one_step(self, i, elems, ax):
         while elems:
             elems.pop().remove()
-        elems.append(ax.text(-4.4, 4.5, "t=" + str(i), fontsize=10))
+        time_str = "t=%.2f[s]" % (self.time_interval * i)
+        elems.append(ax.text(-4.4, 4.5, time_str, fontsize=10))
         for obj in self.objects:
             obj.draw(ax, elems)
+            if hasattr(obj, "one_step"):
+                obj.one_step(1.0)
