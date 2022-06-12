@@ -11,13 +11,20 @@ w = world.World(30, 0.1, debug=False)
 # 円運動させるAgent
 circling = Agent.Agent(0.2, 10 / 180 * math.pi)
 
-# biasなしのロボット
-nobias_robot = IdealRobot.IdealRobot(
-    np.array([0, 0, 0]).T, sensor=None, agent=circling, color="gray"
-)
-print("Created nobias_robot")
-w.append(nobias_robot)
-print("appended nobias_robot in the world")
+
+for i in range(100):
+    # biasなしのロボット
+    nobias_robot = Robot.Robot(
+        np.array([0, 0, 0]).T,
+        sensor=None,
+        agent=circling,
+        color="gray",
+        noise_per_meter=0,
+        bias_rate_stds=(0.0, 0.0),
+        expected_stuck_time=60.0,
+        expected_escape_time=60.0,
+    )
+    w.append(nobias_robot)
 biased_robot = Robot.Robot(
     np.array([0, 0, 0]).T,
     sensor=None,
