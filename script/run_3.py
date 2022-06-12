@@ -23,6 +23,7 @@ for i in range(100):
         bias_rate_stds=(0.0, 0.0),
         expected_stuck_time=60.0,
         expected_escape_time=60.0,
+        expeced_kidnap_time=5
     )
     w.append(nobias_robot)
 biased_robot = Robot.Robot(
