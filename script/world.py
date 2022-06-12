@@ -1,14 +1,9 @@
-from time import time_ns
 import matplotlib.pyplot as plt
-import math
-import matplotlib.patches as patches
-import numpy as np
-import matplotlib
 import matplotlib.animation as anm
 
 
 class World:
-    def __init__(self, time_span, time_interval, debug=False):
+    def __init__(self, time_span, time_interval, debug=True):
         self.objects = []
         self.debug = debug
         self.time_span = time_span

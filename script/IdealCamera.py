@@ -7,7 +7,7 @@ class IdealCamera:
         self,
         env_map,
         distance_range=(0.5, 6.0),
-        direction_range=(-math.pi / 3, math.pi / 3) #-120 < Θ <120
+        direction_range=(-math.pi / 3, math.pi / 3),  # -120 < Θ <120
     ):
         self.map = env_map
         self.lastdata = []
@@ -30,7 +30,6 @@ class IdealCamera:
             z = self.observation_function(cam_pose, Im.pos)
             if self.visible(z):
                 observed.append((z, Im.id))
-
 
         self.lastdata = observed
         return observed

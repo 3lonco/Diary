@@ -1,11 +1,6 @@
-import Agent
-import world
-import matplotlib.pyplot as plt
 import math
 import matplotlib.patches as patches
 import numpy as np
-import Agent
-import IdealCamera
 
 
 class IdealRobot:
@@ -26,7 +21,7 @@ class IdealRobot:
         elems.append(ax.add_patch(c))
         if self.sensor and len(self.poses) > 1:
             self.sensor.draw(ax, elems, self.poses[-2])
-        if self.agent and hasattr(self.agent,"draw"):
+        if self.agent and hasattr(self.agent, "draw"):
             self.agent(ax.elems)
 
         self.poses.append(self.pose)
@@ -36,12 +31,11 @@ class IdealRobot:
             linewidth=0.5,
             color="black",
         )
-        
 
     def one_step(self, time_interval):
         if not self.agent:
             return
-        obs = self.sensor.data(self.pose)
+        obs = self.sensor.data(self.pose) if self.sensor else None  # 追加
         nu, omega = self.agent.decision(obs)
         self.pose = self.state_transition(nu, omega, time_interval, self.pose)
 
