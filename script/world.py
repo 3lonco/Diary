@@ -3,7 +3,7 @@ import matplotlib.animation as anm
 
 
 class World:
-    def __init__(self, time_span, time_interval, debug=True):
+    def __init__(self, time_span, time_interval, debug=False):
         self.objects = []
         self.debug = debug
         self.time_span = time_span

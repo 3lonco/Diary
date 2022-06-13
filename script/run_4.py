@@ -9,7 +9,7 @@ import Robot
 import Camera
 
 
-w = world.World(30, 0.1)
+w = world.World(30, 0.1, debug=False)
 # add three Landmarks after creating an instance of Map
 m = map.Map()
 m.append_landmark(Landmark.Landmark(-4, 2))
