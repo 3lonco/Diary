@@ -1,5 +1,4 @@
-import IdealCamera
-import math
+from IdealCamera import *
 
 
 class Camera(IdealCamera):
