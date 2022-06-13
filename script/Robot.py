@@ -40,15 +40,14 @@ class Robot(IdealRobot):
         self.kidnap_dist = uniform(
             loc=(rx[0], ry[0], 0.0), scale=(rx[1] - rx[0], ry[1] - ry[0], 2 * math.pi)
         )
-    
-    def kidnap(self,pose,time_interval):
+
+    def kidnap(self, pose, time_interval):
         self.time_until_kidnap -= time_interval
-        if self.time_until_escape <=0.0:
-            self.time_until_kidnap +=self.kidnap_pdf.rvs()
+        if self.time_until_escape <= 0.0:
+            self.time_until_kidnap += self.kidnap_pdf.rvs()
             return np.array(self.kidnap_dist.rvs().T)
         else:
             return pose
-
 
     def stuck(self, nu, omega, time_interval):
         if self.is_stuck:  # もしスタックがTrueなら
@@ -86,4 +85,4 @@ class Robot(IdealRobot):
         nu, omega = self.stuck(nu, omega, time_interval)
         self.pose = self.state_transition(nu, omega, time_interval, self.pose)
         self.pose = self.noise(self.pose, nu, omega, time_interval)
-        self.pose = self.kidnap(self.pose,time_interval)
+        self.pose = self.kidnap(self.pose, time_interval)
