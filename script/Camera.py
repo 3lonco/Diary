@@ -15,6 +15,7 @@ class Camera(IdealCamera):  ###camera_second### (initは省略)
         phantom_prob=0.0,
         phantom_range_x=(-5.0, 5.0),
         phantom_range_y=(-5.0, 5.0),
+        oversight_prob=0.1
     ):
         super().__init__(env_map, distance_range, direction_range)
 
@@ -30,13 +31,21 @@ class Camera(IdealCamera):  ###camera_second### (initは省略)
         )
         self.phantom_prob = phantom_prob
 
-    def phantom(self,cam_pose,relpos):
-        if uniform.rvs()<self.phantom_prob:
-            pos = np.array(self.phantom_dist.rvs()).T
-            return self.observation_function(cam_pose,pos)
+        #Add Oversight
+        self.oversight_prob=oversight_prob
+
+    def oversight(self,relpos):#add
+        if uniform.rvs() < self.oversight_prob:
+            return None
         else:
             return relpos
 
+    def phantom(self, cam_pose, relpos):
+        if uniform.rvs() < self.phantom_prob:
+            pos = np.array(self.phantom_dist.rvs()).T
+            return self.observation_function(cam_pose, pos)
+        else:
+            return relpos
 
     def bias(self, relpos):
         return (
@@ -53,7 +62,8 @@ class Camera(IdealCamera):  ###camera_second### (initは省略)
         observed = []
         for lm in self.map.landmarks:
             z = self.observation_function(cam_pose, lm.pos)
-            z = self.phantom(cam_pose,z)
+            z = self.phantom(cam_pose, z)
+            z = self.oversight(z)
             if self.visible(z):
                 z = self.bias(z)
                 z = self.noise(z)
