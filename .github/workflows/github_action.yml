@@ -1,7 +1,22 @@
-name: learn-github-actions
-on: [push]
+#workflowの名前
+name: Shell Commands
+
+#イベントトリガー
+# git  Pushした時にこのワークフローを実行する。
+on : [push]
+
 jobs:
-  check-bats-version:
+  # job(任意の名前で良い)
+  run-shell-command:
+    # virtual machineの形式を指定
     runs-on: ubuntu-latest
+    # jobのステップ
     steps:
-      - run: echo "this is pen"
+    # ステップ名1
+      - name: echo a string
+        run : echo "Hello World"
+    
+      - name: multinline script
+        run :
+          node -v
+          npm -v
