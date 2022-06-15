@@ -1,4 +1,3 @@
-from time import time
 from IdealRobot import *
 from scipy.stats import expon, norm, uniform
 

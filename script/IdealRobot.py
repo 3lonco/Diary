@@ -1,6 +1,7 @@
 import math
 import matplotlib.patches as patches
 import numpy as np
+import EstimationAgent
 
 
 class IdealRobot:
@@ -12,18 +13,13 @@ class IdealRobot:
         self.poses = [pose]
         self.sensor = sensor
 
-    def draw(self, ax, elems):
+    def draw(self, ax, elems):  ### call_agent_draw
         x, y, theta = self.pose
         xn = x + self.r * math.cos(theta)
         yn = y + self.r * math.sin(theta)
         elems += ax.plot([x, xn], [y, yn], color=self.color)
         c = patches.Circle(xy=(x, y), radius=self.r, fill=False, color=self.color)
         elems.append(ax.add_patch(c))
-        if self.sensor and len(self.poses) > 1:
-            self.sensor.draw(ax, elems, self.poses[-2])
-        if self.agent and hasattr(self.agent, "draw"):
-            self.agent(ax.elems)
-
         self.poses.append(self.pose)
         elems += ax.plot(
             [e[0] for e in self.poses],
@@ -31,6 +27,10 @@ class IdealRobot:
             linewidth=0.5,
             color="black",
         )
+        if self.sensor and len(self.poses) > 1:
+            self.sensor.draw(ax, elems, self.poses[-2])
+        if self.agent and hasattr(self.agent, "draw"):  # 以下2行追加
+            self.agent.draw(ax, elems)
 
     def one_step(self, time_interval):
         if not self.agent:

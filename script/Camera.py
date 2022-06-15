@@ -15,7 +15,8 @@ class Camera(IdealCamera):  ###camera_second### (initは省略)
         phantom_prob=0.0,
         phantom_range_x=(-5.0, 5.0),
         phantom_range_y=(-5.0, 5.0),
-        oversight_prob=0.1
+        oversight_prob=0.1,
+        occlusion_prob=0.0,
     ):
         super().__init__(env_map, distance_range, direction_range)
 
@@ -31,12 +32,23 @@ class Camera(IdealCamera):  ###camera_second### (initは省略)
         )
         self.phantom_prob = phantom_prob
 
-        #Add Oversight
-        self.oversight_prob=oversight_prob
+        # Add Oversight
+        self.oversight_prob = oversight_prob
 
-    def oversight(self,relpos):#add
+        # Add occlusion
+        self.occulusion_prob = occlusion_prob
+
+    def oversight(self, relpos):  # add
         if uniform.rvs() < self.oversight_prob:
             return None
+        else:
+            return relpos
+
+    def occulusion(self, relpos):
+        if uniform.rvs() < self.occulusion_prob:
+            ell = relpos[0] + uniform.rvs() * (self.distance_range[1] - relpos[0])
+            phi = relpos[1]
+            return np.array([ell, relpos[1]]).T
         else:
             return relpos
 
