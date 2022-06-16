@@ -1,4 +1,4 @@
-from script import world
+from ..script import world
 
 
 def add(x, y):
