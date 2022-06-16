@@ -22,6 +22,3 @@ class Mcl:  ###Mcl3 (1,2,5行目以降を記載)
         vxs = [math.cos(p.pose[2]) for p in self.particles]
         vys = [math.sin(p.pose[2]) for p in self.particles]
         elems.append(ax.quiver(xs, ys, vxs, vys, color="blue", alpha=0.5))
-
-
-
