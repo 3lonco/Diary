@@ -10,13 +10,20 @@ jobs:
   run-shell-command:
     # virtual machineの形式を指定
     runs-on: ubuntu-latest
+    #strategyはmatrixを使うためのおまじない
+    strategy:
+      #色々なpythonversionをチェックする。
+      matrix:
+        python-version: ["3.6","3.7","3.8","3.9"]
     # jobのステップ
     steps:
     # ステップ名1
       - name: echo a string
         run : echo "Hello World"
+      #step2 
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{matrix.python-version}}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{matrix.python-version}}
     
-      - name: multinline script
-        run :
-          node -v
-          npm -v
