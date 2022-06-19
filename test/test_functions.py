@@ -8,6 +8,7 @@ sys.path.append(
 )
 import step_function
 import sigmoid
+import reluFunction
 import numpy as np
 import pytest
 
@@ -58,3 +59,15 @@ def test_sigmoid_assertion_error():
 def test_sigmoid_type_error():
     with pytest.raises(TypeError) as e:
         sigmoid.sigmoid("a")
+
+
+def test_relu_negative():
+    x = np.array([-100, 0, 1.0])
+    y = reluFunction.relu(x)
+    assert y.all() <= 0
+
+
+def test_relu_positive():
+    x = np.array([0.1, 100, 1.0])
+    y = reluFunction.relu(x)
+    assert y.all() > 0
