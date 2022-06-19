@@ -11,6 +11,7 @@ import sigmoid
 import reluFunction
 import identity_function
 import softmax
+import load_mnist
 import numpy as np
 import pytest
 
@@ -99,3 +100,8 @@ def test_softmax_sum():
     sum = np.sum(softmax.softmax(arr))
     # Check if the sum of an randam array is equal to 1.
     assert pytest.approx(sum, 0.00001) == 1.0
+
+def test_load():
+    (x_train, t_train), (x_test, t_test) = load_mnist.load_mnist(flatten=True, normalize=False)
+    print(x_train.shape[:],t_train.shape[:])
+    assert t_train.shape[0] ==60000
