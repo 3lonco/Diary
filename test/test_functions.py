@@ -9,6 +9,8 @@ sys.path.append(
 import step_function
 import sigmoid
 import reluFunction
+import identity_function
+import softmax
 import numpy as np
 import pytest
 
@@ -71,3 +73,28 @@ def test_relu_positive():
     x = np.array([0.1, 100, 1.0])
     y = reluFunction.relu(x)
     assert y.all() > 0
+
+
+def test_identity_function():
+    x = np.array([1, 2, 0.1])
+    y = identity_function.identity_function(x)
+    assert y.all() == x.all()
+
+
+def test_identity_function():
+    with pytest.raises(TypeError) as e:
+        identity_function.identity_function("a")
+
+
+def test_softmax():
+    a = np.array([0.3, 2.9, 4.0])
+    y = softmax.softmax(a)
+    # Check the output of softmax is the same as the following numbers
+    ans = np.array([0.01821127, 0.24519181, 0.73659691])
+    assert y.all() == ans.all()
+
+
+def test_softmax_sum():
+    arr = np.random.rand(1000)
+    # Check if the sum of an randam array is equal to 1
+    assert np.sum(softmax.softmax(arr)) == 1.0
