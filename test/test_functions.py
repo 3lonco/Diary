@@ -96,5 +96,6 @@ def test_softmax():
 
 def test_softmax_sum():
     arr = np.random.rand(1000)
-    # Check if the sum of an randam array is equal to 1
-    assert np.sum(softmax.softmax(arr)) == 1.0
+    sum = np.sum(softmax.softmax(arr))
+    # Check if the sum of an randam array is equal to 1.
+    assert pytest.approx(sum, 0.00001) == 1.0
