@@ -1,7 +1,8 @@
 # Add path for CI/CD tool
 import sys
 import os
-from typing import Type
+from matplotlib.pyplot import get
+from script.neuralnet_mnist import get_data, init_network, predict
 
 sys.path.append(
     os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/../script/")
@@ -12,8 +13,53 @@ import reluFunction
 import identity_function
 import softmax
 import load_mnist
+import neuralnet_mnist
+import mean_squared_error
+import cross_entropy_error
 import numpy as np
 import pytest
+
+
+def test_cross_entropy_error_1():
+    # normal test
+    # define 2 as correct
+    t = [0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+    y = [0.1, 0.05, 0.6, 0.0, 0.05, 0.1, 0.0, 0.1, 0.0, 0.0]
+    ans = cross_entropy_error.cross_entropy_error(np.array(y), np.array(t))
+    #print(ans)
+    #np.testing.assert_array_almost_equal(ans, 0.51082545, decimal=1)
+
+
+def test_mean_squared_error():
+    # define 2 as correct
+    t = [0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+    y = [0.1, 0.05, 0.6, 0.0, 0.05, 0.1, 0.0, 0.1, 0.0, 0.0]
+    ans = mean_squared_error.mean_squared_error(np.array(y), np.array(t))
+    np.testing.assert_array_almost_equal(ans, 0.097500000000, decimal=3)
+
+
+def test_neural_net():
+    x, t = neuralnet_mnist.get_data()
+    network = init_network()
+    accuracy_cnt = 0
+    for i in range(len(x)):
+        y = predict(network, x[i])
+        p = np.argmax(y)
+        if p == t[i]:
+            accuracy_cnt += 1
+    print("Accuracy:" + str(float(accuracy_cnt) / len(x)))
+
+
+def test_neural_net_test():
+    x, t = neuralnet_mnist.get_data()
+    batch_size = 100  # the number of batch
+    network = init_network()
+    accuracy_cnt = 0
+    for i in range(0, len(x), batch_size):
+        x_batch = x[i : i + batch_size]
+        y_batch = predict(network, x_batch)
+        p = np.argmax(y_batch, axis=1)
+        accuracy_cnt += np.sum(p == t[i : i + batch_size])
 
 
 def test_step_function():
@@ -101,7 +147,9 @@ def test_softmax_sum():
     # Check if the sum of an randam array is equal to 1.
     assert pytest.approx(sum, 0.00001) == 1.0
 
+
 def test_load():
-    (x_train, t_train), (x_test, t_test) = load_mnist.load_mnist(flatten=True, normalize=False)
-    print(x_train.shape[:],t_train.shape[:])
-    assert t_train.shape[0] ==60000
+    (x_train, t_train), (x_test, t_test) = load_mnist.load_mnist(
+        flatten=True, normalize=False
+    )
+    assert t_train.shape[0] == 60000
